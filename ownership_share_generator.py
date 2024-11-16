@@ -1,4 +1,4 @@
-import cv2
+import cv2 
 import hashlib
 import hmac
 import numpy as np

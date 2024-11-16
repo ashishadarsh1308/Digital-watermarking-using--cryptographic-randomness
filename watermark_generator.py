@@ -1,6 +1,5 @@
 import cv2
-import hashlib
-import hmac
+import random
 import numpy as np
 
 IMG_WIDTH = 1200
@@ -14,19 +13,6 @@ WATERMARK_SIZE = WATERMARK_HEIGHT * WATERMARK_WIDTH
 KEY = 1001
 THRESH = 75
 
-def secure_seeded_random_points(seed, img_size, watermark_size):
-    seed_bytes = str(seed).encode('utf-8')  # Convert seed to bytes
-    points = []
-    
-    for i in range(watermark_size):
-        # Create a new HMAC using the seed and index as the message
-        h = hmac.new(seed_bytes, str(i).encode('utf-8'), hashlib.sha256)
-        # Convert the HMAC to an integer and scale it to img_size
-        point = int(h.hexdigest(), 16) % img_size
-        points.append(point)
-    
-    return points
-
 def xor(x ,y):
     if x == 0 and y == 0:
         return 0
@@ -37,8 +23,8 @@ def xor(x ,y):
     elif x !=0 and y != 0:
         return 0
 
-secure_random_points = secure_seeded_random_points(KEY, IMG_SIZE, WATERMARK_SIZE)
-
+random.seed(a=KEY)
+random_points = random.sample(range(IMG_SIZE), WATERMARK_SIZE)
 
 owner_img = cv2.imread('images\owner_img.jpg', 0)
 
